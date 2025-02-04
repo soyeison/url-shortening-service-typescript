@@ -1,3 +1,4 @@
+import { AppDataSource } from "../data-source";
 import {
   CreateURLShorteningPayload,
   CreateURLShorteningResponse,
@@ -7,17 +8,27 @@ import {
   GetStatisticsURLShorteningResponse,
 } from "../dto/find-url-shortening.dto";
 import { UpdateURLShorteningPayload } from "../dto/update-url-shortening-dto";
+import { URLShortening } from "../entities/url-shortening.entity";
 import { IURLShorteningService } from "../interfaces/service-url-shortening.interface";
 
 export class URLShorteningService implements IURLShorteningService {
-  create(
+  async create(
     payload: CreateURLShorteningPayload
   ): Promise<CreateURLShorteningResponse> {
-    // Generar el shortCode
+    // TODO: Generar el shortCode
     console.log("Se genera shortCode");
-    // Utilizar el repositorio para guardar interactuar con la DB
-    console.log("Se guarda en DB");
-    throw new Error("Method not implemented.");
+
+    const modelToSave = new URLShortening();
+    modelToSave.url = payload.url;
+    modelToSave.shortCode = "123";
+
+    const urlEntity = AppDataSource.getRepository(URLShortening);
+    const saved = await urlEntity.save(modelToSave);
+    const responseSchema: CreateURLShorteningResponse = {
+      ...saved,
+    };
+
+    return responseSchema;
   }
   findById(id: number): Promise<FindByIdURLShorteningResponse> {
     throw new Error("Method not implemented.");

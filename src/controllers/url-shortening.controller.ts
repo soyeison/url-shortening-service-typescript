@@ -17,7 +17,6 @@ export class URLShorteningController implements IURLShorteningController {
   async create(
     payload: CreateURLShorteningPayload
   ): Promise<CreateURLShorteningResponse> {
-    // Ejecutar el elemento que implementa la infazz del servicio que necesito
     const response = await this.urlShorteningService.create(payload);
     return response;
   }
