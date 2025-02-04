@@ -23,9 +23,9 @@ export class URLShorteningService implements IURLShorteningService {
     modelToSave.shortCode = "123";
 
     const urlEntity = AppDataSource.getRepository(URLShortening);
-    const saved = await urlEntity.save(modelToSave);
+    const { accessCount, ...rest } = await urlEntity.save(modelToSave);
     const responseSchema: CreateURLShorteningResponse = {
-      ...saved,
+      ...rest,
     };
 
     return responseSchema;
