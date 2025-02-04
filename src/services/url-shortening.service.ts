@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { AppDataSource } from "../data-source";
 import {
   CreateURLShorteningPayload,
@@ -15,12 +16,11 @@ export class URLShorteningService implements IURLShorteningService {
   async create(
     payload: CreateURLShorteningPayload
   ): Promise<CreateURLShorteningResponse> {
-    // TODO: Generar el shortCode
-    console.log("Se genera shortCode");
+    const fullUuid = uuidv4();
 
     const modelToSave = new URLShortening();
     modelToSave.url = payload.url;
-    modelToSave.shortCode = "123";
+    modelToSave.shortCode = fullUuid.split("-")[0];
 
     const urlEntity = AppDataSource.getRepository(URLShortening);
     const { accessCount, ...rest } = await urlEntity.save(modelToSave);
