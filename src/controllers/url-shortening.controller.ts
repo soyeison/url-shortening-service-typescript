@@ -1,0 +1,44 @@
+import { Response, Request } from "express";
+import { IURLShorteningController } from "../interfaces/controller-url-shortening.interface";
+import {
+  CreateURLShorteningPayload,
+  CreateURLShorteningResponse,
+} from "../dto/create-url-shortening.dto";
+import {
+  FindByIdURLShorteningResponse,
+  GetStatisticsURLShorteningResponse,
+} from "../dto/find-url-shortening.dto";
+import { UpdateURLShorteningPayload } from "../dto/update-url-shortening-dto";
+import { URLShorteningService } from "../services/url-shortening.service";
+
+export class URLShorteningController implements IURLShorteningController {
+  constructor(private urlShorteningService: URLShorteningService) {}
+
+  async create(
+    payload: CreateURLShorteningPayload
+  ): Promise<CreateURLShorteningResponse> {
+    // Ejecutar el elemento que implementa la infazz del servicio que necesito
+    const response = await this.urlShorteningService.create(payload);
+    return response;
+  }
+  findById(id: number): Promise<FindByIdURLShorteningResponse> {
+    throw new Error("Method not implemented.");
+  }
+  update(
+    id: number,
+    payload: UpdateURLShorteningPayload
+  ): Promise<FindByIdURLShorteningResponse> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: number): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  getStatistics(
+    shortName: string
+  ): Promise<GetStatisticsURLShorteningResponse> {
+    throw new Error("Method not implemented.");
+  }
+  static async create(req: Request, res: Response) {
+    console.log("Create url shortening");
+  }
+}
