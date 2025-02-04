@@ -6,7 +6,7 @@ import { AppDataSource } from "./data-source";
 const app = express();
 app.use(express.json());
 
-app.use("/url-shortening", urlShorteningRouter);
+app.use("/  ", urlShorteningRouter);
 
 AppDataSource.initialize()
   .then(async () => {

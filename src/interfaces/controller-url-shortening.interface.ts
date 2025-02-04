@@ -13,7 +13,7 @@ export interface IURLShorteningController {
     payload: CreateURLShorteningPayload
   ): Promise<CreateURLShorteningResponse>;
 
-  findById(id: number): Promise<FindByIdURLShorteningResponse>; // Corregir esto para devolver el mismo modelo de la entidad
+  findByShortCode(shortcode: string): Promise<FindByIdURLShorteningResponse>; // Corregir esto para devolver el mismo modelo de la entidad
 
   update(
     id: number,

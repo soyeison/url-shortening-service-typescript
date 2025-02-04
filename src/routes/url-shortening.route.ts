@@ -22,4 +22,21 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/:shortCode", async (req, res) => {
+  const { shortCode } = req.params;
+  if (!shortCode) {
+    res.status(400).json({ message: "Param format incorrect" });
+  } else {
+    const urlShorteningService = new URLShorteningService();
+    const urlShorteningController = new URLShorteningController(
+      urlShorteningService
+    );
+
+    const response = await urlShorteningController.findByShortCode(shortCode);
+
+    res.status(200).json(response);
+  }
+  res.send(`Aqui hay un ${shortCode}`);
+});
+
 export { router as urlShorteningRouter };

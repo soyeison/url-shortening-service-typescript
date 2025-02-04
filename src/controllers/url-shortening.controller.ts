@@ -20,7 +20,7 @@ export class URLShorteningController implements IURLShorteningController {
     const response = await this.urlShorteningService.create(payload);
     return response;
   }
-  findById(id: number): Promise<FindByIdURLShorteningResponse> {
+  findByShortCode(shortCode: string): Promise<FindByIdURLShorteningResponse> {
     throw new Error("Method not implemented.");
   }
   update(
