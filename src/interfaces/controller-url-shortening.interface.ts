@@ -13,14 +13,16 @@ export interface IURLShorteningController {
     payload: CreateURLShorteningPayload
   ): Promise<CreateURLShorteningResponse>;
 
-  findByShortCode(shortcode: string): Promise<FindByIdURLShorteningResponse>; // Corregir esto para devolver el mismo modelo de la entidad
+  findByShortCode(shortCode: string): Promise<string | null>;
 
   update(
-    id: number,
+    shortCode: string,
     payload: UpdateURLShorteningPayload
-  ): Promise<FindByIdURLShorteningResponse>; // TODO: Corregir la respuesta para devolver el modelo
+  ): Promise<FindByIdURLShorteningResponse | null>;
 
-  delete(id: number): Promise<void>;
+  delete(shortCode: string): Promise<void | null>;
 
-  getStatistics(shortName: string): Promise<GetStatisticsURLShorteningResponse>; // TODO: Corregir la respuesta para devolver el modelo que pide roadmap
+  getStatistics(
+    shortCode: string
+  ): Promise<GetStatisticsURLShorteningResponse | null>;
 }

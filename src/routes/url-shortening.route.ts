@@ -22,7 +22,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:shortCode", async (req, res) => {
+router.get("/:shortCode", async (req: Request, res: Response) => {
   const { shortCode } = req.params;
   if (!shortCode) {
     res.status(400).json({ message: "Param format incorrect" });
@@ -33,10 +33,70 @@ router.get("/:shortCode", async (req, res) => {
     );
 
     const response = await urlShorteningController.findByShortCode(shortCode);
-
-    res.status(200).json(response);
+    if (!response) {
+      res.status(404).send("Don't exist url to this shortCode");
+    } else {
+      res.redirect(response);
+    }
   }
-  res.send(`Aqui hay un ${shortCode}`);
+});
+
+router.put("/:shortCode", async (req: Request, res: Response) => {
+  const { shortCode } = req.params;
+  const { url } = req.body;
+  if (!shortCode || !url) {
+    res.status(400).json({ message: "Param format incorrect" });
+  } else {
+    const urlShorteningService = new URLShorteningService();
+    const urlShorteningController = new URLShorteningController(
+      urlShorteningService
+    );
+
+    const response = await urlShorteningController.update(shortCode, { url });
+    if (!response) {
+      res.status(404).send("Don't exist url to this shortCode");
+    } else {
+      res.status(200).json(response);
+    }
+  }
+});
+
+router.delete("/:shortCode", async (req: Request, res: Response) => {
+  const { shortCode } = req.params;
+  if (!shortCode) {
+    res.status(400).json({ message: "Param format incorrect" });
+  } else {
+    const urlShorteningService = new URLShorteningService();
+    const urlShorteningController = new URLShorteningController(
+      urlShorteningService
+    );
+
+    const response = await urlShorteningController.delete(shortCode);
+    if (response === null) {
+      res.status(404).send("Don't exist url to this shortCode");
+    } else {
+      res.status(204).send("Deleted");
+    }
+  }
+});
+
+router.get("/:shortCode/stats", async (req: Request, res: Response) => {
+  const { shortCode } = req.params;
+  if (!shortCode) {
+    res.status(400).json({ message: "Param format incorrect" });
+  } else {
+    const urlShorteningService = new URLShorteningService();
+    const urlShorteningController = new URLShorteningController(
+      urlShorteningService
+    );
+
+    const response = await urlShorteningController.getStatistics(shortCode);
+    if (response === null) {
+      res.status(404).send("Don't exist url to this shortCode");
+    } else {
+      res.status(200).json(response);
+    }
+  }
 });
 
 export { router as urlShorteningRouter };

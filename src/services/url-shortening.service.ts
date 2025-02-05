@@ -30,21 +30,74 @@ export class URLShorteningService implements IURLShorteningService {
 
     return responseSchema;
   }
-  findById(id: number): Promise<FindByIdURLShorteningResponse> {
-    throw new Error("Method not implemented.");
+
+  async findByShortCode(
+    shortCode: string
+  ): Promise<FindByIdURLShorteningResponse | null> {
+    const urlEntity = AppDataSource.getRepository(URLShortening);
+    const entity = await urlEntity.findOne({ where: { shortCode: shortCode } });
+
+    if (!entity) {
+      return null;
+    }
+
+    // Como la entidad existe aumentar el conteo de visitas
+    entity.accessCount += 1;
+    await urlEntity.save(entity);
+
+    const { accessCount, ...rest } = entity;
+    const responseSchema: FindByIdURLShorteningResponse = {
+      ...rest,
+    };
+
+    return responseSchema;
   }
-  update(
-    id: number,
+
+  async update(
+    shortCode: string,
     payload: UpdateURLShorteningPayload
-  ): Promise<FindByIdURLShorteningResponse> {
-    throw new Error("Method not implemented.");
+  ): Promise<FindByIdURLShorteningResponse | null> {
+    const urlEntity = AppDataSource.getRepository(URLShortening);
+    const entity = await urlEntity.findOne({ where: { shortCode: shortCode } });
+
+    if (!entity) {
+      return null;
+    }
+
+    entity.url = payload.url;
+    const entityUpdated = await urlEntity.save(entity);
+    const { accessCount, ...rest } = entityUpdated;
+    const responseSchema: FindByIdURLShorteningResponse = {
+      ...rest,
+    };
+    return responseSchema;
   }
-  delete(id: number): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async delete(shortCode: string): Promise<void | null> {
+    const urlEntity = AppDataSource.getRepository(URLShortening);
+    const entity = await urlEntity.findOne({ where: { shortCode: shortCode } });
+
+    if (!entity) {
+      return null;
+    }
+
+    await AppDataSource.createQueryBuilder()
+      .delete()
+      .from(URLShortening)
+      .where("shortCode = :shortCode", { shortCode })
+      .execute();
   }
-  getStatistics(
-    shortName: string
-  ): Promise<GetStatisticsURLShorteningResponse> {
-    throw new Error("Method not implemented.");
+
+  async getStatistics(
+    shortCode: string
+  ): Promise<GetStatisticsURLShorteningResponse | null> {
+    const urlEntity = AppDataSource.getRepository(URLShortening);
+    const entity = await urlEntity.findOne({ where: { shortCode: shortCode } });
+
+    if (!entity) {
+      return null;
+    }
+
+    return entity;
   }
 }

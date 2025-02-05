@@ -1,14 +1,13 @@
-import { Response, Request } from "express";
 import { IURLShorteningController } from "../interfaces/controller-url-shortening.interface";
 import {
   CreateURLShorteningPayload,
   CreateURLShorteningResponse,
 } from "../dto/create-url-shortening.dto";
+import { GetStatisticsURLShorteningResponse } from "../dto/find-url-shortening.dto";
 import {
-  FindByIdURLShorteningResponse,
-  GetStatisticsURLShorteningResponse,
-} from "../dto/find-url-shortening.dto";
-import { UpdateURLShorteningPayload } from "../dto/update-url-shortening-dto";
+  UpdateURLShorteningPayload,
+  UpdateURLShorteningResponse,
+} from "../dto/update-url-shortening-dto";
 import { URLShorteningService } from "../services/url-shortening.service";
 
 export class URLShorteningController implements IURLShorteningController {
@@ -20,24 +19,49 @@ export class URLShorteningController implements IURLShorteningController {
     const response = await this.urlShorteningService.create(payload);
     return response;
   }
-  findByShortCode(shortCode: string): Promise<FindByIdURLShorteningResponse> {
-    throw new Error("Method not implemented.");
+
+  async findByShortCode(shortCode: string): Promise<string | null> {
+    const response = await this.urlShorteningService.findByShortCode(shortCode);
+
+    if (!response) {
+      return null;
+    }
+
+    return response.url;
   }
-  update(
-    id: number,
+
+  async update(
+    shortCode: string,
     payload: UpdateURLShorteningPayload
-  ): Promise<FindByIdURLShorteningResponse> {
-    throw new Error("Method not implemented.");
+  ): Promise<UpdateURLShorteningResponse | null> {
+    const response = await this.urlShorteningService.update(shortCode, payload);
+
+    if (!response) {
+      return null;
+    }
+
+    return response;
   }
-  delete(id: number): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async delete(shortCode: string): Promise<void | null> {
+    const response = await this.urlShorteningService.delete(shortCode);
+
+    if (response === null) {
+      return null;
+    }
+
+    return undefined;
   }
-  getStatistics(
-    shortName: string
-  ): Promise<GetStatisticsURLShorteningResponse> {
-    throw new Error("Method not implemented.");
-  }
-  static async create(req: Request, res: Response) {
-    console.log("Create url shortening");
+
+  async getStatistics(
+    shortCode: string
+  ): Promise<GetStatisticsURLShorteningResponse | null> {
+    const response = await this.urlShorteningService.getStatistics(shortCode);
+
+    if (!response) {
+      return null;
+    }
+
+    return response;
   }
 }
